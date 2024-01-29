@@ -511,13 +511,11 @@ namespace DI_UD5_CreacionInformes_Wendel
                     }
                     else if (item is string[])
                     {
-                        // En el caso de informe de ventas donde los datos son arrays de strings
                         var value = ((string[])item)[dataGrid.Columns.IndexOf(column)];
                         htmlBuilder.AppendLine($"<td>{value}</td>");
                     }
                     else
                     {
-                        // Manejar otros casos según sea necesario
                         htmlBuilder.AppendLine("<td></td>");
                     }
                 }
@@ -548,7 +546,6 @@ namespace DI_UD5_CreacionInformes_Wendel
                 SqlConnection conexion = conexionBD.getConexion();
 
 
-                // String para crear un tr y sus respectivos td para cada clientes.
                 String tr = "<tr id=\"titulos\">" +
                                 "<td id=\"ID\">@IDCliente</td>" +
                                 "<td id=\"Nombre\">@Nombre</td>" +
@@ -558,7 +555,6 @@ namespace DI_UD5_CreacionInformes_Wendel
 
                 SqlDataReader sqlDataReader = null;
 
-                // Select clientes
                 String consulta = "select * from Fabrica.fabrica.clientes;";
 
                 String datosClientes = "";
@@ -569,7 +565,6 @@ namespace DI_UD5_CreacionInformes_Wendel
                 String ciudad = "";
 
 
-                // Comprobar conexion no nula
                 if(conexion != null)
                 {
                     SqlCommand sqlCommand = new SqlCommand(consulta);
@@ -584,7 +579,6 @@ namespace DI_UD5_CreacionInformes_Wendel
                         String datoCliente = "";
                         datoCliente = tr;
 
-                        //System.Windows.MessageBox.Show(datoCliente);
 
                         id = sqlDataReader.GetInt32("ID_Cliente");
 
@@ -595,7 +589,6 @@ namespace DI_UD5_CreacionInformes_Wendel
                         ciudad = sqlDataReader.GetString("Ciudad");
                         clienteList.Add(new Cliente(id, nombre, direccion, ciudad));
 
-                        //datoCliente.Replace("titulos", "prueba");
 
                         // Reemplazar datos cliente
                         datoCliente = datoCliente.Replace("@IDCliente",id.ToString());
@@ -607,7 +600,6 @@ namespace DI_UD5_CreacionInformes_Wendel
 
                         clienteList.Add(cliente);
 
-                        //System.Windows.MessageBox.Show(datoCliente);
 
                         datosClientes += datoCliente;
                          

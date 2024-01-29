@@ -33,24 +33,24 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <DataGrid Name="dataGrid" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="38,201,10,200"/>
+        <DataGrid Name="dataGrid" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="50,200,50,200"/>
 
-        <Button Content="Establecer Conexión" HorizontalAlignment="Left"  Margin="28,17,0,0" VerticalAlignment="Top" Click="Button_Click" Style="{StaticResource ButtonStyle}"/>
+        <Button Content="Establecer Conexión" HorizontalAlignment="Left"  Margin="50,25,0,0" VerticalAlignment="Top" Click="Button_Click" Style="{StaticResource ButtonStyle}"/>
 
-        <Label Name="label" Content="Aún no se ha establecido conexión con la base de datos." HorizontalAlignment="Left" Height="79" Margin="576,23,0,0" VerticalAlignment="Top" Width="559"/>
+        <Label Name="label" Content="Aún no se ha establecido conexión con la base de datos." VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="79" Margin="293,23,0,0" VerticalAlignment="Top" Width="842"/>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="38,122,0,0">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="45,120,0,0">
             <Button Content="Consultar Artículos" Click="consultarArticulos" Style="{StaticResource ButtonStyle}"/>
             <Button Content="Consultar Clientes" Click="consultarClientes" Style="{StaticResource ButtonStyle}"/>
             <Button Content="Consultar Pedidos" Click="consultarPedidos" Style="{StaticResource ButtonStyle}"/>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="600,127,0,0">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,120,45,0">
             <Button Content="Informe Facturas" Height="60" Width="200" Click="informeFacturas" Style="{StaticResource ButtonStyle}"/>
             <Button Content="Informe Ventas" Height="60" Width="200" Click="informeVentas" Style="{StaticResource ButtonStyle}"/>
         </StackPanel>
 
-        <Button Content="Guardar PDF" HorizontalAlignment="Left" Height="60" Margin="54,616,0,0" VerticalAlignment="Top" Width="200" Click="SaveToPdfButton_Click" Style="{StaticResource ButtonStyle}"/>
+        <Button Content="Guardar PDF" HorizontalAlignment="Left" Height="60" Margin="50,616,0,0" VerticalAlignment="Top" Width="200" Click="SaveToPdfButton_Click" Style="{StaticResource ButtonStyle}"/>
     </Grid>
 
 
