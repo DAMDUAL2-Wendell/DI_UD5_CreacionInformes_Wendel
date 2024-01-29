@@ -26,6 +26,7 @@ using Path = System.IO.Path;
 using iText.Layout;
 using Binding = System.Windows.Data.Binding;
 using System.ComponentModel;
+using System.Collections;
 
 namespace DI_UD5_CreacionInformes_Wendel
 {
@@ -466,7 +467,7 @@ namespace DI_UD5_CreacionInformes_Wendel
             htmlBuilder.AppendLine("th, td { border: 1px solid #ddd; padding: 10px; text-align: center; font-family: 'Arial', sans-serif}");
             htmlBuilder.AppendLine("th { background-color: #4CAF50; color: white; font-weight: bold; font-family: 'Georgia', serif; } ");
             htmlBuilder.AppendLine("tr:nth-child(even){background-color: #f2f2f2} ");
-            htmlBuilder.AppendLine(".number {text-align: right;}");
+            htmlBuilder.AppendLine(".euros {text-align: right;}");
             htmlBuilder.AppendLine("h1{text-align: center; font-family: 'verdana', sans-serif;}");
             htmlBuilder.AppendLine("</style>");
 
@@ -501,9 +502,9 @@ namespace DI_UD5_CreacionInformes_Wendel
                     {
                         var value = propertyInfo.GetValue(item, null);
                         //htmlBuilder.AppendLine($"<td>{value}</td>");
-                        if (value != null && IsNumeric(value))
+                        if (value != null && value.ToString().Contains("€"))
                         {
-                            htmlBuilder.AppendLine($"<td class='number'>{value}</td>");
+                            htmlBuilder.AppendLine($"<td class='euros'>{value}</td>");
                         }
                         else
                         {
@@ -537,9 +538,115 @@ namespace DI_UD5_CreacionInformes_Wendel
             return value is int || value is decimal || value is float || value is double || value is Int16 || value is Int32 || value is Int64;
         }
 
+        private void GuardarDatosExcel(object sender, RoutedEventArgs e)
+        {
+            try { 
+            DataTableExcel(DataGridToDataTable());
+            }
+            catch (Exception ex) {
+                System.Windows.MessageBox.Show("Error al guardar el documento excel.");
+            }
+        }
+
         public static void DataTableExcel(System.Data.DataTable dataTable)
         {
+            SLDocument excel = new SLDocument();
 
+            excel.ImportDataTable(2,2,dataTable,true);
+
+            // crear archivo con fecha y hora.
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".xlsx";
+            if(saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                // Guardar fichero en la ruta especificada.
+                excel.SaveAs(saveFileDialog.FileName);
+            }
+        }
+
+        private DataTable DataGridToDataTable()
+        {
+            var dt = new DataTable();
+
+            
+            foreach (DataGridColumn dataGridColumn in dataGrid.Columns)
+            {
+                if (dataGridColumn is DataGridTextColumn)
+                {
+                    DataGridTextColumn dataGridTextColumn = (DataGridTextColumn)dataGridColumn;
+                    string header = GetHeader(dataGridColumn);
+                    dt.Columns.Add(header);
+                }
+            }
+
+
+            foreach (var item in dataGrid.Items)
+            {
+                DataRow dataRow = dt.NewRow();
+
+                foreach (var column in dataGrid.Columns)
+                {
+                    var propertyName = ((DataGridColumn)column).SortMemberPath;
+                    var propertyInfo = item.GetType().GetProperty(propertyName);
+                    string header = GetHeader(column);
+                    if (propertyInfo != null)
+                    {
+                        var value = propertyInfo.GetValue(item, null);
+                        dataRow[header] = value;
+
+                    }
+                    else if (item is string[])
+                    {
+                        var value = ((string[])item)[dataGrid.Columns.IndexOf(column)];
+                        dataRow[header] = value;
+                    }
+                }
+
+                dt.Rows.Add(dataRow);
+            }
+
+
+            return dt;
+        }
+
+        private static string GetHeader(DataGridColumn dataGridColumn)
+        {
+            if(dataGridColumn != null)
+            {
+                return $"{((DataGridColumn)dataGridColumn).Header}";
+            }
+            else
+            {
+                return "Dato Desconocido.";
+            }
+            return dataGridColumn.Header.ToString();
+
+            /*
+            if(dataGridColumn is string)
+            {
+                return dataGridColumn.Header.ToString();
+            }
+            var binding = dataGridColumn.SortMemberPath;
+            if (!string.IsNullOrEmpty(binding))
+            {
+                return binding;
+            }
+            return "ColumnaDesconocida";*/
+        }
+
+        private static object ObtenerValorCelda(object item, DataGridTextColumn textColumn)
+        {
+            var binding = textColumn.Binding as System.Windows.Data.Binding;
+            if(binding != null)
+            {
+                string propertyPath = binding.Path.Path;
+                var property = item.GetType().GetProperty(propertyPath);
+                if(property != null)
+                {
+                    return property.GetValue(item, null);
+                }
+            }
+            return null;
         }
 
 

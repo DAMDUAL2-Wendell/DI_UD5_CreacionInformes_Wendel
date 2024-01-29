@@ -50,7 +50,8 @@
             <Button Content="Informe Ventas" Height="60" Width="200" Click="informeVentas" Style="{StaticResource ButtonStyle}"/>
         </StackPanel>
 
-        <Button Content="Guardar PDF" HorizontalAlignment="Left" Height="60" Margin="50,616,0,0" VerticalAlignment="Top" Width="200" Click="SaveToPdfButton_Click" Style="{StaticResource ButtonStyle}"/>
+        <Button Content="Guardar PDF" HorizontalAlignment="Left" Height="60" Margin="50,616,0,0" Click="SaveToPdfButton_Click" Style="{StaticResource ButtonStyle}"/>
+        <Button Content="Guardar EXCEL" HorizontalAlignment="Left" Margin="300,616,0,0"  Style="{StaticResource ButtonStyle}" Click="GuardarDatosExcel"/>
     </Grid>
 
 
