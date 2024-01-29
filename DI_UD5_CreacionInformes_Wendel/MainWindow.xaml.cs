@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SpreadsheetLight;
 
 using iText;
 using iText.Html2pdf;
@@ -534,6 +535,11 @@ namespace DI_UD5_CreacionInformes_Wendel
         public static bool IsNumeric(object value)
         {
             return value is int || value is decimal || value is float || value is double || value is Int16 || value is Int32 || value is Int64;
+        }
+
+        public static void DataTableExcel(System.Data.DataTable dataTable)
+        {
+
         }
 
 
