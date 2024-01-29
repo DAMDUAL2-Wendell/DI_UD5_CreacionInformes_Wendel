@@ -1,0 +1,57 @@
+﻿<Window x:Class="DI_UD5_CreacionInformes_Wendel.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DI_UD5_CreacionInformes_Wendel"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="800" Width="1200">
+    <Window.Resources>
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#FFECECEC"/>
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="Width" Value="200"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="Transparent" BorderThickness="1" CornerRadius="10">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FFCACACA"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <DataGrid Name="dataGrid" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="38,201,10,200"/>
+
+        <Button Content="Establecer Conexión" HorizontalAlignment="Left"  Margin="28,17,0,0" VerticalAlignment="Top" Click="Button_Click" Style="{StaticResource ButtonStyle}"/>
+
+        <Label Name="label" Content="Aún no se ha establecido conexión con la base de datos." HorizontalAlignment="Left" Height="79" Margin="576,23,0,0" VerticalAlignment="Top" Width="559"/>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="38,122,0,0">
+            <Button Content="Consultar Artículos" Click="consultarArticulos" Style="{StaticResource ButtonStyle}"/>
+            <Button Content="Consultar Clientes" Click="consultarClientes" Style="{StaticResource ButtonStyle}"/>
+            <Button Content="Consultar Pedidos" Click="consultarPedidos" Style="{StaticResource ButtonStyle}"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="600,127,0,0">
+            <Button Content="Informe Facturas" Height="60" Width="200" Click="informeFacturas" Style="{StaticResource ButtonStyle}"/>
+            <Button Content="Informe Ventas" Height="60" Width="200" Click="informeVentas" Style="{StaticResource ButtonStyle}"/>
+        </StackPanel>
+
+        <Button Content="Guardar PDF" HorizontalAlignment="Left" Height="60" Margin="54,616,0,0" VerticalAlignment="Top" Width="200" Click="SaveToPdfButton_Click" Style="{StaticResource ButtonStyle}"/>
+    </Grid>
+
+
+</Window>

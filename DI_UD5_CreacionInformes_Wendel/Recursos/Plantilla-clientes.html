@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        <style>
+
+            #tablaPrincipal{
+                padding: 5px;
+                border: 1px solid black;
+            }
+
+            #tablaSecundaria{
+                border: 0;
+                width: 100%;
+            }
+
+            #titulos{
+                background-color: lightgrey;
+            }
+
+
+        </style>
+    </head>
+    <body>
+
+
+        <h1>LISTA DE CLIENTES</h1>
+        <table id="tablaPrincipal">
+            <tr>
+                <td>
+                    <table id="tablaSecundaria">
+                        <tr id="titulos">
+                            <td style="width: 20%;" id="ID" align="center">ID Cliente</td>
+                            <td style="width: 20%;" id="Nombre" align="center">Nombre</td>
+                            <td style="width: 40%;" id="Direccion" align="center">Direccion</td>
+                            <td style="width: 20%;" id="Ciudad" align="center">Ciudad</td>
+                        </tr>
+                        @CLIENTE_DATOS
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+    </body>
+</html>
