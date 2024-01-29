@@ -548,15 +548,15 @@ namespace DI_UD5_CreacionInformes_Wendel
             }
         }
 
-        public static void DataTableExcel(System.Data.DataTable dataTable)
+        public void DataTableExcel(System.Data.DataTable dataTable)
         {
             SLDocument excel = new SLDocument();
 
-            excel.ImportDataTable(2,2,dataTable,true);
+            excel.ImportDataTable(1,1,dataTable,true);
 
             // crear archivo con fecha y hora.
             SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.FileName = DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".xlsx";
+            saveFileDialog.FileName = DateTime.Now.ToString("yyyyMMdd-HHmmss") + consultaTipo + ".xlsx";
             if(saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 // Guardar fichero en la ruta especificada.
