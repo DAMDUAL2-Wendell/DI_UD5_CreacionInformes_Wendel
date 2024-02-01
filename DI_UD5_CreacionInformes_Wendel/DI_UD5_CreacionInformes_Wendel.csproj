@@ -8,6 +8,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="618244_excel_2000x2000.png" />
+    <None Remove="excel_icon.svg" />
+    <None Remove="OIP.jpg" />
+    <None Remove="Recursos\excel_icon.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="618244_excel_2000x2000.png" />
+    <Resource Include="excel_icon.svg" />
+    <Resource Include="OIP.jpg" />
+    <Resource Include="Recursos\excel_icon.svg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="itext7" Version="8.0.2" />
     <PackageReference Include="itext7.bouncy-castle-adapter" Version="8.0.2" />
     <PackageReference Include="itext7.pdfhtml" Version="5.0.2" />

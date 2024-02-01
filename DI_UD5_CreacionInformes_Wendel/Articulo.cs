@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DI_UD5_CreacionInformes_Wendel
 {
+    // Clase Modelo que representa un articulo en la base de datos.
     internal class Articulo
     {
 

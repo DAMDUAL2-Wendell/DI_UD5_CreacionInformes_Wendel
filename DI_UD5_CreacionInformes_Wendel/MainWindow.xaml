@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DI_UD5_CreacionInformes_Wendel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="1200">
+        Title="MainWindow"
+        ResizeMode="NoResize"
+        Height="900" Width="1200">
     <Window.Resources>
         <Style x:Key="ButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#FFECECEC"/>
@@ -33,11 +35,11 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <DataGrid Name="dataGrid" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="50,200,50,200"/>
+        <DataGrid Name="dataGrid" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="50,200,50,197"/>
 
-        <Button Content="Establecer Conexión" HorizontalAlignment="Left"  Margin="50,25,0,0" VerticalAlignment="Top" Click="Button_Click" Style="{StaticResource ButtonStyle}"/>
+        <Button Content="Establecer Conexión" HorizontalAlignment="Left"  Margin="50,25,0,0" VerticalAlignment="Top" Click="EstablecerConexion" Style="{StaticResource ButtonStyle}"/>
 
-        <Label Name="label" Content="Aún no se ha establecido conexión con la base de datos." VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="79" Margin="293,23,0,0" VerticalAlignment="Top" Width="842"/>
+        <Label Name="label" Content="Aún no se ha establecido conexión con la base de datos." VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="79" Margin="521,23,0,0" VerticalAlignment="Top" Width="614"/>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="45,120,0,0">
             <Button Content="Consultar Artículos" Click="consultarArticulos" Style="{StaticResource ButtonStyle}"/>
@@ -50,8 +52,19 @@
             <Button Content="Informe Ventas" Height="60" Width="200" Click="informeVentas" Style="{StaticResource ButtonStyle}"/>
         </StackPanel>
 
-        <Button Content="Guardar PDF" HorizontalAlignment="Left" Height="60" Margin="50,616,0,0" Click="SaveToPdfButton_Click" Style="{StaticResource ButtonStyle}"/>
-        <Button Content="Guardar EXCEL" HorizontalAlignment="Left" Margin="300,616,0,0"  Style="{StaticResource ButtonStyle}" Click="GuardarDatosExcel"/>
+        <Button Name="btnSavePDF" HorizontalAlignment="Left" Height="Auto" Margin="146,728,0,63" Click="SaveToPdfButton_Click" Style="{StaticResource ButtonStyle}" Width="80">
+            <Button.Background>
+                <ImageBrush ImageSource="/OIP.jpg"></ImageBrush>
+            </Button.Background>
+        </Button>
+        <Button Name="btnSaveEXCEL" HorizontalAlignment="Left" Height="Auto" Width="80" Margin="411,723,0,59"  Style="{StaticResource ButtonStyle}" Click="GuardarDatosExcel">
+            <Button.Background>
+                <ImageBrush ImageSource="/618244_excel_2000x2000.png"></ImageBrush>
+            </Button.Background>
+        </Button>
+        <Button Content="Cerrar Conexión" HorizontalAlignment="Left"  Margin="260,25,0,0" VerticalAlignment="Top" Click="BtnCerrarConexion" Style="{StaticResource ButtonStyle}"/>
+        <Label Content="Guardar PDF" HorizontalAlignment="Left" Height="28" Margin="54,760,0,0" VerticalAlignment="Top" Width="92" RenderTransformOrigin="0.597,0.024"/>
+        <Label Content="Guardar EXCEL" HorizontalAlignment="Left" Height="28" Margin="314,760,0,0" VerticalAlignment="Top" Width="92"/>
     </Grid>
 
 

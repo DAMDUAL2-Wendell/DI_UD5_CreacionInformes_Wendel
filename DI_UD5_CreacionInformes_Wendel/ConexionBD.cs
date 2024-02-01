@@ -8,15 +8,20 @@ using System.Data;
 
 namespace DI_UD5_CreacionInformes_Wendel
 {
+    // Clase para con los métodos y objetos necesarios para realizar la conexión con la base de datos.
     internal class ConexionBD
     {
+        // Objeto SqlConnection con la conexión
         private SqlConnection conexion;
+
+        // Strings con los valores para la conexión.
         private String database = "fabrica";
         private String servidor = "localhost";
         private String usuario = "sa";
         private String password = "abc123.";
         private String CadeaConexion;
 
+        // Constructor que asigna la query de conexión al string CadeaConexion.
         public ConexionBD()
         {
             CadeaConexion = "Persist Security Info=False;" +
@@ -27,6 +32,7 @@ namespace DI_UD5_CreacionInformes_Wendel
 
         }
 
+        // Metodo para establecer la conexión.
         public SqlConnection getConexion()
         {
             if(conexion == null)
@@ -42,26 +48,7 @@ namespace DI_UD5_CreacionInformes_Wendel
 
         }
 
-        /*
-        public SqlDataReader ExecuteQuery(string consulta)
-        {
-            SqlDataReader sqlDataReader = null;
-            if (true)
-            {
-                try
-                {
-                    SqlConnection connection = getConexion();
-                    SqlCommand command = new SqlCommand(consulta, connection);
-                    sqlDataReader = command.ExecuteReader(CommandBehavior.CloseConnection);
-                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            }
-            return sqlDataReader;
-        }
-        */
+        // Metodo para ejecutar una consulta sobre la conexión.
         public SqlDataReader ExecuteQuery(string query)
         {
             try
@@ -76,6 +63,7 @@ namespace DI_UD5_CreacionInformes_Wendel
             }
         }
 
+        // Método para cerrar la conexión.
         public void CerrarConexion()
         {
             try

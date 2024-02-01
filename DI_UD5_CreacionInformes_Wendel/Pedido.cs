@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DI_UD5_CreacionInformes_Wendel
 {
+    // Objeto Modelo que representa un pedido en la base de datos.
     internal class Pedido
     {
         private int iDPedido;
