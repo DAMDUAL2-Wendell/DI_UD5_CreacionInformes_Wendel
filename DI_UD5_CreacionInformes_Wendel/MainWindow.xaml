@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DI_UD5_CreacionInformes_Wendel"
         mc:Ignorable="d"
-        Title="MainWindow"
+        Title="Informes Empresa"
         ResizeMode="NoResize"
-        Height="900" Width="1200">
+        Height="898" Width="1200">
     <Window.Resources>
         <Style x:Key="ButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#FFECECEC"/>
@@ -33,38 +33,96 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="dataGridStilo" TargetType="{x:Type DataGridRow}">
+            <Setter Property="Foreground" Value="#FFB3B3B3"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#FF262626"/>
+                </Trigger>
+
+                <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                    <Setter Property="Background" Value="#FF383838"/>
+                </Trigger>
+
+                <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                    <Setter Property="Background" Value="#FF333333"/>
+                </Trigger>
+
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="DataGridRowStyle1" TargetType="{x:Type DataGrid}">
+            <Setter Property="Foreground" Value="#FFB3B3B3"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#FF262626"/>
+                </Trigger>
+                <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                    <Setter Property="Background" Value="#FF383838"/>
+                </Trigger>
+                <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                    <Setter Property="Background" Value="#FF333333"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <Grid>
-        <DataGrid Name="dataGrid" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="50,200,50,197"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="339*"/>
+            <ColumnDefinition Width="61*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="341*"/>
+            <RowDefinition Height="85*"/>
+            <RowDefinition Height="15*"/>
+        </Grid.RowDefinitions>
+        <DataGrid Name="dataGrid" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="54,296,46,10" Grid.ColumnSpan="2" />
 
-        <Button Content="Establecer Conexión" HorizontalAlignment="Left"  Margin="50,25,0,0" VerticalAlignment="Top" Click="EstablecerConexion" Style="{StaticResource ButtonStyle}"/>
+        <Button Content="Establecer Conexión" HorizontalAlignment="Left"  Margin="54,121,0,0" VerticalAlignment="Top" Click="EstablecerConexion" Style="{StaticResource ButtonStyle}" Height="60" Width="200"/>
 
-        <Label Name="label" Content="Aún no se ha establecido conexión con la base de datos." VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="79" Margin="521,23,0,0" VerticalAlignment="Top" Width="614"/>
+        <Label Name="label" Content="Aún no se ha establecido conexión con la base de datos." VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="79" Margin="525,119,0,0" VerticalAlignment="Top" Width="614" Grid.ColumnSpan="2"/>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="45,120,0,0">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="49,216,0,0" Height="70" Width="630">
             <Button Content="Consultar Artículos" Click="consultarArticulos" Style="{StaticResource ButtonStyle}"/>
             <Button Content="Consultar Clientes" Click="consultarClientes" Style="{StaticResource ButtonStyle}"/>
             <Button Content="Consultar Pedidos" Click="consultarPedidos" Style="{StaticResource ButtonStyle}"/>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,120,45,0">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,216,41,0" Grid.ColumnSpan="2" Height="70" Width="420">
             <Button Content="Informe Facturas" Height="60" Width="200" Click="informeFacturas" Style="{StaticResource ButtonStyle}"/>
             <Button Content="Informe Ventas" Height="60" Width="200" Click="informeVentas" Style="{StaticResource ButtonStyle}"/>
         </StackPanel>
 
-        <Button Name="btnSavePDF" HorizontalAlignment="Left" Height="Auto" Margin="146,728,0,63" Click="SaveToPdfButton_Click" Style="{StaticResource ButtonStyle}" Width="80">
+        <Button Name="btnSavePDF" HorizontalAlignment="Left" Height="Auto" Margin="151,58,0,34" Click="SaveToPdfButton_Click" Style="{StaticResource ButtonStyle}" Width="80" Grid.Row="1">
             <Button.Background>
                 <ImageBrush ImageSource="/OIP.jpg"></ImageBrush>
             </Button.Background>
         </Button>
-        <Button Name="btnSaveEXCEL" HorizontalAlignment="Left" Height="Auto" Width="80" Margin="411,723,0,59"  Style="{StaticResource ButtonStyle}" Click="GuardarDatosExcel">
+
+
+        <Button Name="btnSaveEXCEL" HorizontalAlignment="Left" Height="Auto" Width="80" Margin="416,57,0,35"  Style="{StaticResource ButtonStyle}" Click="GuardarDatosExcel" Grid.Row="1">
             <Button.Background>
                 <ImageBrush ImageSource="/618244_excel_2000x2000.png"></ImageBrush>
             </Button.Background>
         </Button>
-        <Button Content="Cerrar Conexión" HorizontalAlignment="Left"  Margin="260,25,0,0" VerticalAlignment="Top" Click="BtnCerrarConexion" Style="{StaticResource ButtonStyle}"/>
-        <Label Content="Guardar PDF" HorizontalAlignment="Left" Height="28" Margin="54,760,0,0" VerticalAlignment="Top" Width="92" RenderTransformOrigin="0.597,0.024"/>
-        <Label Content="Guardar EXCEL" HorizontalAlignment="Left" Height="28" Margin="314,760,0,0" VerticalAlignment="Top" Width="92"/>
+        <Button Content="Cerrar Conexión" HorizontalAlignment="Left"  Margin="264,121,0,0" VerticalAlignment="Top" Click="BtnCerrarConexion" Style="{StaticResource ButtonStyle}" Height="60" Width="200"/>
+        <Label Content="Guardar PDF" HorizontalAlignment="Left" Height="26" Margin="59,84,0,0" VerticalAlignment="Top" Width="92" RenderTransformOrigin="0.597,0.024" Grid.Row="1"/>
+        <Label Content="Guardar EXCEL" HorizontalAlignment="Left" Height="26" Margin="319,84,0,0" VerticalAlignment="Top" Width="92" Grid.Row="1"/>
+        <Ellipse Name="ellipse" Fill="Red" HorizontalAlignment="Left" Height="20" Margin="480,140,0,0" Stroke="Black" VerticalAlignment="Top" Width="20"/>
+        <Menu HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="1180" Grid.ColumnSpan="2" Margin="10,0,0,0">
+            <MenuItem Header="Opciones" Height="40">
+                <MenuItem Header="Ayuda" InputGestureText="F1" Click="HelpClickChm"></MenuItem>
+                <MenuItem Header="Ayuda PDF" InputGestureText="F5" Click="HelpClickPdf"></MenuItem>
+            </MenuItem>
+        </Menu>
+        <Label Content="Creación de Informes" HorizontalAlignment="Left" Height="74" Margin="254,45,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Top" Width="654" FontSize="40" FontWeight="Bold" FontFamily="Stencil"/>
+        <Rectangle Name="rectangleBtnGuardarPdf" HorizontalAlignment="Left" Height="92" Margin="146,49,0,0" Stroke="#FFCEFF00" VerticalAlignment="Top" Width="89" StrokeThickness="6" Visibility="Visible" RadiusX="12" RadiusY="12" Grid.Row="1"/>
+        <Rectangle Name="rectangleBtnGuardarExcel" HorizontalAlignment="Left" Height="92" Margin="411,51,0,0" Stroke="#FFCEFF00" VerticalAlignment="Top" Width="89" StrokeThickness="6" Visibility="Visible" RadiusX="12" RadiusY="12" Grid.Row="1"/>
+        <Button Content="Limpiar tabla" HorizontalAlignment="Left" Height="34" Margin="27,10,0,0" VerticalAlignment="Top" Width="115" Click="BtnClear" Style="{StaticResource ButtonStyle}" Grid.Column="1" Grid.Row="1"/>
     </Grid>
 
 

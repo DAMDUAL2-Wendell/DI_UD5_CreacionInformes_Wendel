@@ -27,6 +27,8 @@ using iText.Layout;
 using Binding = System.Windows.Data.Binding;
 using System.ComponentModel;
 using System.Collections;
+using System.Windows.Threading;
+using System.Diagnostics;
 
 namespace DI_UD5_CreacionInformes_Wendel
 {
@@ -45,10 +47,63 @@ namespace DI_UD5_CreacionInformes_Wendel
         //  Contenido que tendrá la etiqueta H1 en el documento html que se crea antes de convertirlo a PDF.
         String tituloHtml = "";
 
+        // Temporizador que actualiza el tiempo cada segundo
+        DispatcherTimer timer = new DispatcherTimer();
+
         public MainWindow()
         {
             InitializeComponent();
             disableButtons();
+
+            ellipse.Stroke = System.Windows.Media.Brushes.Black;
+
+
+            // Configuración del temporizador
+            this.timer = new DispatcherTimer();
+            timer.Tick += new EventHandler(timer_Tick);
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Start();
+
+            // Asignar el método AbrirPdf al evento de la escucha las teclas
+            this.PreviewKeyDown += AbrirPdfTeclaF1;
+        }
+
+
+
+        // Método que se ejecuta cada segundo
+        private async void timer_Tick(object sender, EventArgs e)
+
+        {
+            Boolean conectado = false;
+
+            try
+            {
+                if (this.conexionBD != null)
+                {
+                    conectado = this.conexionBD.IsConnected();
+                }
+                else
+                {
+                    conectado = false;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                conectado = false;
+            }
+
+            if (conectado)
+            {
+                ellipse.Fill = System.Windows.Media.Brushes.Green;
+            }
+            else
+            {
+                ellipse.Fill = System.Windows.Media.Brushes.Red;
+            }
+
+            CommandManager.InvalidateRequerySuggested();
+
         }
 
         // Deshabilitar botones de guardado
@@ -56,18 +111,29 @@ namespace DI_UD5_CreacionInformes_Wendel
         {
             btnSaveEXCEL.IsEnabled = false;
             btnSavePDF.IsEnabled = false;
+            rectangleBtnGuardarExcel.Visibility = Visibility.Hidden;
+            rectangleBtnGuardarPdf.Visibility = Visibility.Hidden;
         }
 
         // Habilitar botones de guardado
         private void enableButtons()
         {
-            btnSaveEXCEL.IsEnabled = true;
-            btnSavePDF.IsEnabled = true;
+            if(this.conexionBD != null)
+            {
+                if (conexionBD.IsConnected())
+                {
+                    btnSaveEXCEL.IsEnabled = true;
+                    btnSavePDF.IsEnabled = true;
+                    rectangleBtnGuardarExcel.Visibility = Visibility.Visible;
+                    rectangleBtnGuardarPdf.Visibility = Visibility.Visible;
+                }
+            }
+  
         }
 
         private void EstablecerConexion(object sender, RoutedEventArgs e)
         {
-            Conectar(sender,e);
+            Conectar(sender, e);
         }
 
         private void Conectar(object sender, RoutedEventArgs e)
@@ -167,6 +233,12 @@ namespace DI_UD5_CreacionInformes_Wendel
                     this.consultaTipo = "_articulos";
                     this.tituloHtml = "LISTA DE ARTICULOS";
 
+                    // DataGrid Style
+
+                    // System.Windows.Style headerStyle = new System.Windows.Style(typeof(DataGridViewColumnHeaderCell));
+                    //headerStyle.Setters.Add(new Setter(System.Windows.Controls.Control.BackgroundProperty, new SolidColorBrush(Colors.AliceBlue)));
+                    //dataGrid.ColumnHeaderStyle = headerStyle;
+
                     // Habilitar botones de guardado
                     enableButtons();
 
@@ -216,7 +288,6 @@ namespace DI_UD5_CreacionInformes_Wendel
                             direccion = sqlDataReader.GetString("Direccion");
                             ciudad = sqlDataReader.GetString("Ciudad");
                             clienteList.Add(new Cliente(id, nombre, direccion, ciudad));
-
                         }
                     }
                     dataGrid.Columns.Clear();
@@ -286,7 +357,7 @@ namespace DI_UD5_CreacionInformes_Wendel
                     labelConexion("Error al ejecutar la consulta: ");
                 }
 
-                
+
             }
             catch (SqlException ex)
             {
@@ -301,7 +372,8 @@ namespace DI_UD5_CreacionInformes_Wendel
 
         public void informeFacturas(object sender, RoutedEventArgs e)
         {
-            try {
+            try
+            {
                 if (this.conexionBD == null || this.conexionBD.getConexion() == null)
                 {
                     labelConexion("Primero debe establecerse una conexión con el servidor.");
@@ -398,7 +470,7 @@ namespace DI_UD5_CreacionInformes_Wendel
                 }
                 else
                 {
-                    String consulta = 
+                    String consulta =
                     "SELECT a.Descripcion AS DescripcionArticulo, " +
                         "SUM(d.Unidades) AS CantidadTotalVendida " +
                     "FROM " +
@@ -409,8 +481,8 @@ namespace DI_UD5_CreacionInformes_Wendel
                     "ORDER BY " +
                         "CantidadTotalVendida DESC;";
 
-                SqlDataReader sqlDataReader = null;
-                List<string[]> strings = new List<string[]>();
+                    SqlDataReader sqlDataReader = null;
+                    List<string[]> strings = new List<string[]>();
 
                     sqlDataReader = this.conexionBD.ExecuteQuery(consulta);
 
@@ -422,7 +494,7 @@ namespace DI_UD5_CreacionInformes_Wendel
                         {
                             String aDescripcion = sqlDataReader.GetString("DescripcionArticulo");
                             String cantidadTotal = sqlDataReader.GetInt32("CantidadTotalVendida").ToString();
-                            String[] informe = new string[] { aDescripcion, cantidadTotal};
+                            String[] informe = new string[] { aDescripcion, cantidadTotal };
                             strings.Add(informe);
 
                         }
@@ -455,10 +527,11 @@ namespace DI_UD5_CreacionInformes_Wendel
         }
 
 
-        private void SaveToPdfButton_Click(object sender, RoutedEventArgs e) {
+        private void SaveToPdfButton_Click(object sender, RoutedEventArgs e)
+        {
 
             string htmlConStilos = ConvertDataGridToHtml(dataGrid);
-            
+
             string tempHtmlFile = Path.Combine(Path.GetTempPath(), "temp.html");
             File.WriteAllText(tempHtmlFile, htmlConStilos);
 
@@ -466,15 +539,15 @@ namespace DI_UD5_CreacionInformes_Wendel
 
             guardarPDF.FileName = DateTime.Now.ToString("yyyyMMdd-HHmm") + this.consultaTipo + ".pdf";
 
-                if (guardarPDF.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
-                    PdfWriter writer = new PdfWriter(guardarPDF.FileName);
+            if (guardarPDF.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                PdfWriter writer = new PdfWriter(guardarPDF.FileName);
 
-                    var pdfWriter = new PdfWriter(writer);
+                var pdfWriter = new PdfWriter(writer);
 
-                    var pdfDocument = new PdfDocument(pdfWriter);
+                var pdfDocument = new PdfDocument(pdfWriter);
 
-                    HtmlConverter.ConvertToPdf(htmlConStilos, pdfWriter);
+                HtmlConverter.ConvertToPdf(htmlConStilos, pdfWriter);
 
                 string rutaGuardado = guardarPDF.FileName;
 
@@ -509,14 +582,14 @@ namespace DI_UD5_CreacionInformes_Wendel
             htmlBuilder.AppendLine("<body>");
 
             // Titulo
-            htmlBuilder.AppendLine("<h1>" + this.tituloHtml +"</h1>");
+            htmlBuilder.AppendLine("<h1>" + this.tituloHtml + "</h1>");
 
             // Tabla
             htmlBuilder.AppendLine("<table>");
             htmlBuilder.AppendLine("<tr>");
 
             // Agregar los encabezados de la tabla en negrita (nombre de las columnas).
-            foreach(var column in dataGrid.Columns)
+            foreach (var column in dataGrid.Columns)
             {
                 htmlBuilder.AppendLine($"<th>{((DataGridColumn)column).Header}</th>");
             }
@@ -587,13 +660,15 @@ namespace DI_UD5_CreacionInformes_Wendel
         // Metodo para guardar el dataGrid en un documento EXCEL
         private void GuardarDatosExcel(object sender, RoutedEventArgs e)
         {
-            try {
+            try
+            {
                 // Llamada al método para guardar un fichero excel a partir de un DataTable,
                 // le pasamos como parametro la llamada al método DataGridToDataTable que nos devuelve un objeto
                 // DataTable a partir del dataGrid
                 SaveDataTableExcel(DataGridToDataTable());
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 System.Windows.MessageBox.Show("Error al guardar el documento excel." + ex.Message);
             }
         }
@@ -616,8 +691,9 @@ namespace DI_UD5_CreacionInformes_Wendel
             estiloEncabezado.Fill.SetPatternType(DocumentFormat.OpenXml.Spreadsheet.PatternValues.Solid);
             estiloEncabezado.Fill.SetPatternForegroundColor(System.Drawing.Color.FromArgb(0, 128, 0));
 
-            for (int col = 1; col<=dataTable.Columns.Count; col++) {
-                excel.SetCellValue(1, col,dataTable.Columns[col - 1].ColumnName);
+            for (int col = 1; col <= dataTable.Columns.Count; col++)
+            {
+                excel.SetCellValue(1, col, dataTable.Columns[col - 1].ColumnName);
                 excel.SetCellStyle(1, col, estiloEncabezado);
                 // Valor ancho maximo de la cabecera
                 double maxAnchoCabecera = dataTable.Columns[col - 1].ColumnName.Length * 1.2;
@@ -631,29 +707,31 @@ namespace DI_UD5_CreacionInformes_Wendel
             SLStyle estiloCelda = new SLStyle();
             //estiloCelda.SetHorizontalAlignment(DocumentFormat.OpenXml.Spreadsheet.HorizontalAlignmentValues.Center);
 
-            for (int row = 0; row < dataTable.Rows.Count; row ++) {
+            for (int row = 0; row < dataTable.Rows.Count; row++)
+            {
                 estiloCelda.Fill.SetPatternType(DocumentFormat.OpenXml.Spreadsheet.PatternValues.Solid);
-                estiloCelda.Fill.SetPatternForegroundColor(System.Drawing.Color.FromArgb(random.Next(150,256), random.Next(150,256), random.Next(150,256)));
+                estiloCelda.Fill.SetPatternForegroundColor(System.Drawing.Color.FromArgb(random.Next(150, 256), random.Next(150, 256), random.Next(150, 256)));
 
-                for (int col = 0; col < dataTable.Columns.Count; col ++)
+                for (int col = 0; col < dataTable.Columns.Count; col++)
                 {
                     object valorCelda = dataTable.Rows[row][col];
                     // Estimacion del ancho de una celda
                     double anchoCelda = (valorCelda != null) ? valorCelda.ToString().Length * 1.2 : 1.0;
 
                     // Si es mas grande asignarle el valor al valor máximo de ancho.
-                    if(anchoCelda > maxAncho)
+                    if (anchoCelda > maxAncho)
                     {
                         maxAncho = anchoCelda;
                     }
 
-                    if(valorCelda != null)
+                    if (valorCelda != null)
                     {
-                        if(valorCelda is bool)
+                        if (valorCelda is bool)
                         {
                             excel.SetCellValue(row + 2, col + 1, (bool)valorCelda);
                         }
-                        else if (valorCelda is DateTime){
+                        else if (valorCelda is DateTime)
+                        {
                             excel.SetCellValue(row + 2, col + 1, (DateTime)valorCelda);
                         }
                         else
@@ -674,12 +752,12 @@ namespace DI_UD5_CreacionInformes_Wendel
                 }
             }
 
-            excel.ImportDataTable(1,1,dataTable,true);
+            excel.ImportDataTable(1, 1, dataTable, true);
 
             // crear archivo con fecha y hora.
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.FileName = DateTime.Now.ToString("yyyyMMdd-HHmmss") + consultaTipo + ".xlsx";
-            if(saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 // Guardar fichero en la ruta especificada.
                 excel.SaveAs(saveFileDialog.FileName);
@@ -737,7 +815,7 @@ namespace DI_UD5_CreacionInformes_Wendel
         // Metodo para obtener el valor de un DataGridcolumn en formato de String.
         private static string GetHeader(DataGridColumn dataGridColumn)
         {
-            if(dataGridColumn != null)
+            if (dataGridColumn != null)
             {
                 return $"{((DataGridColumn)dataGridColumn).Header}";
             }
@@ -752,11 +830,11 @@ namespace DI_UD5_CreacionInformes_Wendel
         private static object ObtenerValorCelda(object item, DataGridTextColumn textColumn)
         {
             var binding = textColumn.Binding as System.Windows.Data.Binding;
-            if(binding != null)
+            if (binding != null)
             {
                 string propertyPath = binding.Path.Path;
                 var property = item.GetType().GetProperty(propertyPath);
-                if(property != null)
+                if (property != null)
                 {
                     return property.GetValue(item, null);
                 }
@@ -791,7 +869,7 @@ namespace DI_UD5_CreacionInformes_Wendel
                 String direccion = "";
                 String ciudad = "";
 
-                if(conexion != null)
+                if (conexion != null)
                 {
                     SqlCommand sqlCommand = new SqlCommand(consulta);
                     sqlCommand.Connection = conexion;
@@ -812,12 +890,12 @@ namespace DI_UD5_CreacionInformes_Wendel
                         clienteList.Add(new Cliente(id, nombre, direccion, ciudad));
 
                         // Reemplazar datos cliente
-                        datoCliente = datoCliente.Replace("@IDCliente",id.ToString());
+                        datoCliente = datoCliente.Replace("@IDCliente", id.ToString());
                         datoCliente = datoCliente.Replace("@Nombre", nombre);
                         datoCliente = datoCliente.Replace("@Direccion", direccion);
                         datoCliente = datoCliente.Replace("@Ciudad", ciudad);
 
-                        Cliente cliente = new Cliente(id,nombre,direccion,ciudad);
+                        Cliente cliente = new Cliente(id, nombre, direccion, ciudad);
 
                         clienteList.Add(cliente);
 
@@ -828,9 +906,9 @@ namespace DI_UD5_CreacionInformes_Wendel
                     dataGrid.ItemsSource = clienteList;
 
                     SaveFileDialog guardarPDF = new SaveFileDialog();
-                    
+
                     guardarPDF.FileName = DateTime.Now.ToString("yyyyMMdd-HHss") + ".pdf";
-                    
+
                     // String con el documento HTML
                     String plantillaHtml = new StreamReader("../../../Recursos/Plantilla-clientes.html").ReadToEnd();
 
@@ -857,6 +935,78 @@ namespace DI_UD5_CreacionInformes_Wendel
         private void BtnCerrarConexion(object sender, RoutedEventArgs e)
         {
             CerrarConexion();
+        }
+
+        // Método que devuelve la ruta donde está el proyecto + la ruta que se le pasa como parámetro.
+        public static string bingPathToAppDir(string localPath)
+        {
+            string currentDir = Environment.CurrentDirectory;
+            DirectoryInfo directory = new DirectoryInfo(
+                Path.GetFullPath(Path.Combine(currentDir, @"..\..\..\" + localPath)));
+            return directory.ToString();
+        }
+
+        // Método para abrir la ayuda
+        private void HelpClickChm(object sender, RoutedEventArgs e)
+        {
+            string helpFileName = bingPathToAppDir(@"Recursos\Help\help.chm");
+            try
+            {
+                if (System.IO.File.Exists(helpFileName))
+                {
+                    Help.ShowHelp(null, helpFileName);
+                }
+                else
+                {
+                    System.Windows.MessageBox.Show("Fichero de ayuda no encontrado");
+                }
+            }
+            catch (Exception ex) { System.Windows.MessageBox.Show("Error al abrir la ayuda."); };
+        }
+
+        // Método para abrir un documento PDF de ayuda con el programa Internet Explorer.
+        private void HelpClickPdf(object sender, RoutedEventArgs e)
+        {
+            string helpFileName = bingPathToAppDir(@"Recursos\Help\help.pdf");
+
+            try
+            {
+                if (System.IO.File.Exists(helpFileName))
+                {
+                    Process.Start(@"C:\Program Files\Internet Explorer\iexplore.exe", helpFileName);
+                }
+                else
+                {
+                    System.Windows.MessageBox.Show("Fichero de ayuda no encontrado");
+                }
+            }
+            catch (Exception ex) { System.Windows.MessageBox.Show("Error al abrir la ayuda." + ex.Message); };
+            
+        }
+
+        // Abrir ayuda en función de la tecla pulsada
+        private void AbrirPdfTeclaF1(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            // Si la tecla pulsada es F1 abro la ayuda CHM.
+            if (e.Key == Key.F1)
+            {
+                HelpClickChm(sender,e);
+            }
+            // Si la tecla pulsada es F5 abro la ayuda en formato PDF.
+            if (e.Key == Key.F5)
+            {
+                HelpClickPdf(sender, e);
+            }
+        }
+
+        private void BtnClear(object sender, RoutedEventArgs e)
+        {
+            // Limpiar datagrid
+            dataGrid.Columns.Clear();
+            dataGrid.ItemsSource = null;
+
+            // Deshabilitar botones de guardado
+            disableButtons();
         }
     }
 

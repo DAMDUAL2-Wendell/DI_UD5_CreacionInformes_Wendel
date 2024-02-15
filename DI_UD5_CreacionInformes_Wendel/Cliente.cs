@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DI_UD5_CreacionInformes_Wendel
 {
-    // Clase Modelo que representa un cliente en la base de datos.
+    /// <summary>Clase Modelo que representa un cliente en la base de datos.</summary>
     internal class Cliente
     {
         private int idCliente;
@@ -19,6 +19,11 @@ namespace DI_UD5_CreacionInformes_Wendel
         public string Direccion { get => direccion; set => direccion = value; }
         public string Ciudad { get => ciudad; set => ciudad = value; }
 
+        /// <summary>Constructor de la clase Cliente. Inicializa una nueva instancia de la clase <see cref="Cliente" />.</summary>
+        /// <param name="idCliente">Identificador único para cada cliente.</param>
+        /// <param name="nombre">El nombre del cliente.</param>
+        /// <param name="direccion">Dirección completa del cliente.</param>
+        /// <param name="ciudad">Ciudad del cliente.</param>
         public Cliente(int idCliente, string nombre, string direccion, string ciudad)
         {
             IdCliente = idCliente;

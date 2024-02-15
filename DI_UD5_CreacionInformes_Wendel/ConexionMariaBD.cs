@@ -16,6 +16,9 @@ namespace DI_UD5_CreacionInformes_Wendel
 
         string connectionString = "Server=localhost:3306;Database=fabrica;Uid=root;Pwd=;";
 
+        /// <summary>Método que establece una conexión  con un servidor SQL.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="RoutedEventArgs" /> instance containing the event data.</param>
         public void conectar(object sender, RoutedEventArgs e)
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
@@ -34,15 +37,22 @@ namespace DI_UD5_CreacionInformes_Wendel
             }
         }
 
+        /// <summary>Método que devuelve el objeto MySqlConnection de la clase.</summary>
+        /// <returns>
+        ///   <br />
+        /// </returns>
         public MySqlConnection getConexion()
         {
             return this.connection;
         }
 
+        /// <summary>Ejecuta una consulta en la base de datos.</summary>
+        /// <param name="consulta">La consulta SQL.</param>
+        /// <returns>Devuelve un objeto MySqlDataReader, null en caso de error al ejecutar la consulta.</returns>
         public MySqlDataReader ExecuteQuery(string consulta)
         {
             MySqlDataReader sqlDataReader = null;
-            if (true)
+            if (this.connection.State ==ConnectionState.Open)
             {
                 try
                 {

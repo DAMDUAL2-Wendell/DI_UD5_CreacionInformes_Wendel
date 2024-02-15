@@ -8,11 +8,11 @@ using System.Data;
 
 namespace DI_UD5_CreacionInformes_Wendel
 {
-    // Clase para con los métodos y objetos necesarios para realizar la conexión con la base de datos.
+    /// <summary>Clase con los métodos necesarios para establecer una conexión con la base de datos.</summary>
     internal class ConexionBD
     {
         // Objeto SqlConnection con la conexión
-        private SqlConnection conexion;
+        public SqlConnection conexion;
 
         // Strings con los valores para la conexión.
         private String database = "fabrica";
@@ -21,7 +21,7 @@ namespace DI_UD5_CreacionInformes_Wendel
         private String password = "abc123.";
         private String CadeaConexion;
 
-        // Constructor que asigna la query de conexión al string CadeaConexion.
+        /// <summary>Constructor de la clase <see cref="ConexionBD" />, asigna la query de conexión al string CadeaConexion.</summary>
         public ConexionBD()
         {
             CadeaConexion = "Persist Security Info=False;" +
@@ -31,8 +31,8 @@ namespace DI_UD5_CreacionInformes_Wendel
                             ";Server=" + servidor;
 
         }
-
-        // Metodo para establecer la conexión.
+        /// <summary>Establece una conexión con la base de datos.</summary>
+        /// <returns>Devuelve el objeto SqlConnection, null en caso de fallo en la conexión.</returns>
         public SqlConnection getConexion()
         {
             if(conexion == null)
@@ -48,7 +48,14 @@ namespace DI_UD5_CreacionInformes_Wendel
 
         }
 
-        // Metodo para ejecutar una consulta sobre la conexión.
+        public bool IsConnected()
+        {
+            return this.conexion.State == ConnectionState.Open;
+        }
+
+        /// <summary>Ejecuta una consulta en la base de datos.</summary>
+        /// <param name="consulta">La consulta SQL.</param>
+        /// <returns>Devuelve un objeto SqlDataReader, null en caso de error al ejecutar la consulta.</returns>
         public SqlDataReader ExecuteQuery(string query)
         {
             try
@@ -59,11 +66,12 @@ namespace DI_UD5_CreacionInformes_Wendel
             catch (Exception ex)
             {
                 this.CerrarConexion(); // Asegurarse de cerrar la conexión en caso de error
-                throw new Exception("Error al ejecutar la consulta: " + ex.Message);
+                //throw new Exception("Error al ejecutar la consulta: " + ex.Message);
             }
+            return null;
         }
 
-        // Método para cerrar la conexión.
+        /// <summary>Método para cerrar la conexión.</summary>
         public void CerrarConexion()
         {
             try
@@ -75,7 +83,7 @@ namespace DI_UD5_CreacionInformes_Wendel
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al cerrar la conexión: " + ex.Message);
+                //throw new Exception("Error al cerrar la conexión: " + ex.Message);
             }
         }
 
